@@ -4,7 +4,8 @@
             [ring.swagger.common :refer :all]
             [ring.swagger.json-schema :as jsons]
             [ring.swagger.core :as rsc]
-            [ring.swagger.swagger2-schema :as schema]))
+            [ring.swagger.swagger2-schema :as schema]
+            [schema-tools.core :as tools]))
 
 ;; Stuff from prismatic plumbing
 
@@ -64,8 +65,8 @@
     (let [schema-json (jsons/->swagger model options)]
       (vector {:in "body"
                :name (name (s/schema-name schema))
-               :description (or (:description (jsons/->swagger schema options)) "")
-               :required (not (jsons/maybe? model))
+               :description (tools/resolve-schema-description schema)
+               :required true
                :schema (dissoc schema-json :description)}))))
 
 (defmethod extract-parameter :default [in model options]
@@ -78,8 +79,8 @@
       (merge
         {:in (name in)
          :name (name rk)
-         :description ""
-         :required (or (= in :path) (s/required-key? k))}
+         :description (tools/resolve-schema-description v)
+         :required (s/required-key? k)}
         json-schema))))
 
 (defn- default-response-description
