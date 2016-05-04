@@ -3,6 +3,7 @@
   (:require [clojure.string :as str]
             [clojure.walk :as walk]
             [schema.core :as s]
+            [plumbing.core :refer :all]
 
             ; the json-encoders are registered in ring.swagger.json
             ; there are client projects depending on ring.swagger.core ns to get the json encodings
@@ -167,4 +168,3 @@
         scheme (if (= x-forwarded-proto "https") "https" (name scheme))
         port (if (#{80 443} server-port) "" (str ":" server-port))]
     (str scheme "://" server-name port context)))
-
