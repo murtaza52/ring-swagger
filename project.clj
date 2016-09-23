@@ -1,10 +1,16 @@
-(defproject metosin/ring-swagger "0.22.7"
+(defproject helpshift/ring-swagger "0.22.11"
   :description "Swagger Spec for Ring Apps"
   :url "https://github.com/metosin/ring-swagger"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo
             :comments "same as Clojure"}
+  :plugins [[s3-wagon-private "1.1.2"]]
+  :repositories [["private" {:url "s3p://maven.helpshift.com/releases/"
+                             ;; assumes LEIN_USERNAME and LEIN_PASSPHRASE
+                             ;; environment variables
+                             :username :env
+                             :passphrase :env}]]
   :dependencies [[cheshire "5.6.1"]
                  [slingshot "0.12.2"]
                  [metosin/ring-http-response "0.6.5"]

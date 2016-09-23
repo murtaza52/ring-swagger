@@ -18,13 +18,28 @@
                         vals
                         (map vals)
                         flatten)
+        form-data-models (->> route-meta
+                              (map (comp :formData :parameters)))
         body-models (->> route-meta
                          (map (comp :body :parameters)))
         response-models (->> route-meta
                              (map :responses)
                              (mapcat vals)
                              (keep :schema))]
-    (concat body-models response-models)))
+    (concat form-data-models body-models response-models)))
+
+(defn transform [schema]
+  (let [properties (jsons/properties schema)
+        additional-properties (jsons/additional-properties schema)
+        required (->> (rsc/required-keys schema)
+                      (filter (partial contains? properties))
+                      vec)
+        ]
+    (remove-empty-keys
+      {:type "object"
+       :properties properties
+       :additionalProperties additional-properties
+       :required required})))
 
 (defn transform-models [schemas options]
   (->> schemas
