@@ -1,4 +1,4 @@
-(defproject helpshift/ring-swagger "0.22.11"
+(defproject helpshift/ring-swagger "0.22.13"
   :description "Swagger Spec for Ring Apps"
   :url "https://github.com/metosin/ring-swagger"
   :license {:name "Eclipse Public License"

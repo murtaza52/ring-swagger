@@ -22,11 +22,15 @@
                               (map (comp :formData :parameters)))
         body-models (->> route-meta
                          (map (comp :body :parameters)))
+        query-models (->> route-meta
+                          (map (comp :query :parameters)))
+        path-models (->> route-meta
+                         (map (comp :path :parameters)))
         response-models (->> route-meta
                              (map :responses)
                              (mapcat vals)
                              (keep :schema))]
-    (concat form-data-models body-models response-models)))
+    (concat form-data-models body-models response-models query-models path-models)))
 
 (defn transform [schema]
   (let [properties (jsons/properties schema)
@@ -71,10 +75,11 @@
                 json-schema (jsons/->swagger v options)]
           :when json-schema]
       (merge
-        {:in (name in)
-         :name (name rk)
-         :description (tools/resolve-schema-description v)
-         :required (s/required-key? k)}
+       {:type "object"
+        :in (name in)
+        :name (name rk)
+        :description (tools/resolve-schema-description v)
+        :required (s/required-key? k)}
         json-schema))))
 
 (defn- default-response-description
